@@ -82,6 +82,21 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    // Enviar email de confirmación de pedido
+    if (process.env.RESEND_API_KEY) {
+      const user = await prisma.user.findUnique({ where: { id: userId }, select: { name: true, email: true } });
+      if (user) {
+        const { sendOrderConfirmationEmail } = await import("@/lib/resend");
+        sendOrderConfirmationEmail(
+          user.email,
+          user.name,
+          order.orderNumber,
+          total,
+          items.map((i: any) => ({ name: i.name, quantity: i.quantity, price: i.price }))
+        ).catch(() => {});
+      }
+    }
+
     return NextResponse.json({ orderNumber: order.orderNumber, orderId: order.id, success: true });
   } catch (error) {
     console.error(error);

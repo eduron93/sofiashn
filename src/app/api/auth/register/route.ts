@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 
 export async function POST(request: Request) {
@@ -12,6 +11,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "La contraseña debe tener al menos 6 caracteres" }, { status: 400 });
     }
 
+    const { prisma } = await import("@/lib/prisma");
     const exists = await prisma.user.findUnique({ where: { email } });
     if (exists) {
       return NextResponse.json({ error: "El correo ya está registrado" }, { status: 400 });
@@ -22,6 +22,12 @@ export async function POST(request: Request) {
       data: { name, email, password: hashed, role: "CUSTOMER" },
       select: { id: true, name: true, email: true },
     });
+
+    // Enviar email de bienvenida (sin bloquear la respuesta)
+    if (process.env.RESEND_API_KEY) {
+      const { sendWelcomeEmail } = await import("@/lib/resend");
+      sendWelcomeEmail(email, name).catch(() => {});
+    }
 
     return NextResponse.json({ user, success: true }, { status: 201 });
   } catch (error) {
