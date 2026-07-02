@@ -6,6 +6,6 @@ export default defineConfig({
     path: "prisma/migrations",
   },
   datasource: {
-    url: "postgresql://postgres:password@localhost:5433/velora_db",
+    url: process.env.DATABASE_URL!,
   },
 });
