@@ -8,8 +8,10 @@ export function NewsletterPopup() {
   const [visible, setVisible] = useState(false);
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [storeName, setStoreName] = useState("nuestra tienda");
 
   useEffect(() => {
+    fetch("/api/config").then(r => r.json()).then(d => { if (d.store_name) setStoreName(d.store_name); }).catch(() => {});
     const dismissed = localStorage.getItem("velora-newsletter");
     if (dismissed) return;
     const timer = setTimeout(() => setVisible(true), 5000);
@@ -84,7 +86,7 @@ export function NewsletterPopup() {
                 ) : (
                   <>
                     <h3 className="font-semibold text-lg text-center mb-2">
-                      ¡Únete a la familia VELORA!
+                      ¡Únete a la familia {storeName}!
                     </h3>
                     <p className="text-gray-500 text-sm text-center mb-6">
                       Suscríbete y recibe ofertas exclusivas, nuevas colecciones y más.
