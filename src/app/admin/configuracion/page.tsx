@@ -2,22 +2,22 @@ export const dynamic = "force-dynamic";
 
 import type { Metadata } from "next";
 import { ConfiguracionClient } from "./ConfiguracionClient";
-import { readFileSync, existsSync } from "fs";
-import { join } from "path";
+import { prisma } from "@/lib/prisma";
 
 export const metadata: Metadata = { title: "Configuración" };
 
-function loadSettings(): Record<string, string> {
+async function loadSettings(): Promise<Record<string, string>> {
   try {
-    const path = join(process.cwd(), "store-config.json");
-    if (!existsSync(path)) return {};
-    return JSON.parse(readFileSync(path, "utf-8"));
+    const rows = await prisma.setting.findMany();
+    const cfg: Record<string, string> = {};
+    for (const row of rows) cfg[row.key] = row.value;
+    return cfg;
   } catch {
     return {};
   }
 }
 
-export default function AdminConfiguracionPage() {
-  const settings = loadSettings();
+export default async function AdminConfiguracionPage() {
+  const settings = await loadSettings();
   return <ConfiguracionClient settings={settings} />;
 }
