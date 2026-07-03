@@ -1,12 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Mail, ArrowRight } from "lucide-react";
 
 export function NewsletterSection() {
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
+  const [storeName, setStoreName] = useState("nuestra tienda");
+
+  useEffect(() => {
+    fetch("/api/config").then(r => r.json()).then(d => { if (d.store_name) setStoreName(d.store_name); }).catch(() => {});
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,7 +42,7 @@ export function NewsletterSection() {
             Suscríbete y Recibe 15% OFF
           </h2>
           <p className="mt-3 text-gray-400 leading-relaxed">
-            Únete a más de 50,000 personas que ya reciben las mejores ofertas, novedades y tendencias de VELORA directamente en su correo.
+            Únete a más de 50,000 personas que ya reciben las mejores ofertas, novedades y tendencias de {storeName} directamente en su correo.
           </p>
 
           {sent ? (
