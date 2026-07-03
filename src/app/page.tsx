@@ -8,15 +8,12 @@ import { CountdownBanner } from "@/components/home/CountdownBanner";
 import { TestimonialsSection } from "@/components/home/TestimonialsSection";
 import { NewsletterSection } from "@/components/home/NewsletterSection";
 import type { Product } from "@/types";
-import { readFileSync, existsSync } from "fs";
-import { join } from "path";
 
-function getStoreName(): string {
+async function getStoreName(): Promise<string> {
   try {
-    const path = join(process.cwd(), "store-config.json");
-    if (!existsSync(path)) return "nuestra tienda";
-    const cfg = JSON.parse(readFileSync(path, "utf-8"));
-    return cfg.store_name || "nuestra tienda";
+    const { prisma } = await import("@/lib/prisma");
+    const row = await prisma.setting.findUnique({ where: { key: "store_name" } });
+    return row?.value || "nuestra tienda";
   } catch {
     return "nuestra tienda";
   }
@@ -85,7 +82,7 @@ async function getHomeProducts() {
 }
 
 export default async function HomePage() {
-  const storeName = getStoreName();
+  const storeName = await getStoreName();
   const [{ featured, newArrivals, bestSellers, onSale }, categories, banners] = await Promise.all([
     getHomeProducts(),
     getCategories(),

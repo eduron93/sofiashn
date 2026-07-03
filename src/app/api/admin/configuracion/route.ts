@@ -1,9 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { readFileSync, writeFileSync, existsSync } from "fs";
-import { join } from "path";
 import { verifyAdminRequest } from "@/lib/admin-auth";
-
-const CONFIG_PATH = join(process.cwd(), "store-config.json");
 
 const ALLOWED_KEYS = new Set([
   "store_name", "store_email", "store_phone", "store_address",
@@ -23,19 +19,18 @@ const ALLOWED_KEYS = new Set([
   "email_smtp_user", "email_smtp_pass",
 ]);
 
-function readConfig(): Record<string, string> {
-  try {
-    if (!existsSync(CONFIG_PATH)) return {};
-    return JSON.parse(readFileSync(CONFIG_PATH, "utf-8"));
-  } catch {
-    return {};
-  }
-}
-
 export async function GET(req: NextRequest) {
   const authError = await verifyAdminRequest(req);
   if (authError) return authError;
-  return NextResponse.json(readConfig());
+  try {
+    const { prisma } = await import("@/lib/prisma");
+    const rows = await prisma.setting.findMany();
+    const config: Record<string, string> = {};
+    for (const row of rows) config[row.key] = row.value;
+    return NextResponse.json(config);
+  } catch {
+    return NextResponse.json({});
+  }
 }
 
 export async function POST(req: NextRequest) {
@@ -48,17 +43,20 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Datos inválidos" }, { status: 400 });
     }
 
-    // Solo permitir claves conocidas y valores string
-    const filtered: Record<string, string> = {};
+    const { prisma } = await import("@/lib/prisma");
+    const upserts = [];
     for (const [key, value] of Object.entries(body)) {
       if (ALLOWED_KEYS.has(key) && typeof value === "string" && value.length <= 500) {
-        filtered[key] = value;
+        upserts.push(
+          prisma.setting.upsert({
+            where: { key },
+            update: { value },
+            create: { key, value },
+          })
+        );
       }
     }
-
-    const current = readConfig();
-    const updated = { ...current, ...filtered };
-    writeFileSync(CONFIG_PATH, JSON.stringify(updated, null, 2), "utf-8");
+    await Promise.all(upserts);
     return NextResponse.json({ success: true });
   } catch {
     return NextResponse.json({ error: "Error al guardar configuración" }, { status: 500 });

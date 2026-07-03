@@ -9,15 +9,16 @@ import { WhatsAppButton } from "@/components/ui/WhatsAppButton";
 import { NewsletterPopup } from "@/components/marketing/NewsletterPopup";
 import { FavoritesSync } from "@/components/layout/FavoritesSync";
 import { Providers } from "@/components/layout/Providers";
-import { readFileSync, existsSync } from "fs";
-import { join } from "path";
 import { headers } from "next/headers";
 
-function getStoreConfig(): { maintenance: boolean; name: string; description: string } {
+async function getStoreConfig(): Promise<{ maintenance: boolean; name: string; description: string }> {
   try {
-    const path = join(process.cwd(), "store-config.json");
-    if (!existsSync(path)) return { maintenance: false, name: "SOFIAS HN", description: "" };
-    const cfg = JSON.parse(readFileSync(path, "utf-8"));
+    const { prisma } = await import("@/lib/prisma");
+    const rows = await prisma.setting.findMany({
+      where: { key: { in: ["store_name", "store_description", "seo_description", "maintenance_mode"] } },
+    });
+    const cfg: Record<string, string> = {};
+    for (const r of rows) cfg[r.key] = r.value;
     return {
       maintenance: cfg.maintenance_mode === "true",
       name: cfg.store_name || "SOFIAS HN",
@@ -35,7 +36,7 @@ const geistSans = Geist({
 });
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { name, description } = getStoreConfig();
+  const { name, description } = await getStoreConfig();
   const desc = description || `Descubre moda premium en ${name}. Ropa, calzado y accesorios. Envíos rápidos y pago seguro.`;
   return {
     title: {
@@ -64,7 +65,7 @@ export const viewport: Viewport = {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const headersList = await headers();
   const pathname = headersList.get("x-pathname") ?? "";
-  const { maintenance, name: storeName } = getStoreConfig();
+  const { maintenance, name: storeName } = await getStoreConfig();
   const isAdmin = pathname.startsWith("/admin");
 
   if (maintenance && !isAdmin) {

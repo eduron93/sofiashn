@@ -371,6 +371,14 @@ model Newsletter {
   @@map("newsletter")
 }
 
+model Setting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+
+  @@map("settings")
+}
+
 model AdminUser {
   id          String   @id @default(cuid())
   name        String
