@@ -1,11 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
-import { writeFileSync, mkdirSync } from "fs";
-import { join, extname } from "path";
 import { randomBytes } from "crypto";
+import { extname } from "path";
+import { createClient } from "@supabase/supabase-js";
 import { verifyAdminRequest } from "@/lib/admin-auth";
 
 const ALLOWED = ["image/jpeg", "image/jpg", "image/png", "image/webp", "image/gif"];
-const MAX_SIZE = 5 * 1024 * 1024; // 5 MB
+const MAX_SIZE = 5 * 1024 * 1024;
+
+function getSupabase() {
+  const url = `https://${process.env.SUPABASE_PROJECT_ID}.supabase.co`;
+  const key = process.env.SUPABASE_SERVICE_KEY ?? "";
+  return createClient(url, key);
+}
 
 export async function POST(req: NextRequest) {
   const authError = await verifyAdminRequest(req);
@@ -22,13 +28,19 @@ export async function POST(req: NextRequest) {
     const buffer = Buffer.from(await file.arrayBuffer());
     const ext = extname(file.name) || ".jpg";
     const filename = `${randomBytes(12).toString("hex")}${ext}`;
-    const uploadsDir = join(process.cwd(), "public", "uploads");
 
-    mkdirSync(uploadsDir, { recursive: true });
-    writeFileSync(join(uploadsDir, filename), buffer);
+    const supabase = getSupabase();
+    const { error } = await supabase.storage
+      .from("uploads")
+      .upload(filename, buffer, { contentType: file.type, upsert: false });
 
-    return NextResponse.json({ url: `/uploads/${filename}` }, { status: 201 });
-  } catch {
+    if (error) throw error;
+
+    const { data: { publicUrl } } = supabase.storage.from("uploads").getPublicUrl(filename);
+
+    return NextResponse.json({ url: publicUrl }, { status: 201 });
+  } catch (e: any) {
+    console.error("Upload error:", e);
     return NextResponse.json({ error: "Error al subir la imagen" }, { status: 500 });
   }
 }
