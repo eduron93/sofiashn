@@ -1,9 +1,20 @@
-﻿"use client";
+"use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
 export function WhatsAppButton() {
-  const phone = "5215512345678";
+  const [phone, setPhone] = useState("");
+
+  useEffect(() => {
+    fetch("/api/config")
+      .then(r => r.json())
+      .then(d => { if (d.social_whatsapp) setPhone(d.social_whatsapp.replace(/\D/g, "")); })
+      .catch(() => {});
+  }, []);
+
+  if (!phone) return null;
+
   const message = encodeURIComponent("Hola! Tengo una pregunta sobre un producto en SOFIAS HN.");
   const href = `https://wa.me/${phone}?text=${message}`;
 
