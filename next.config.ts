@@ -17,6 +17,7 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "images.unsplash.com" },
       { protocol: "https", hostname: "i.pravatar.cc" },
       { protocol: "https", hostname: "**.cloudinary.com" },
+      { protocol: "https", hostname: "**.supabase.co" },
       { protocol: "https", hostname: "**.amazonaws.com" },
     ],
     formats: ["image/avif", "image/webp"],
