@@ -31,8 +31,8 @@ async function getInventory() {
 export default async function AdminInventarioPage() {
   const products = await getInventory();
 
-  const outOfStock = products.filter((p) => p.stock === 0).length;
-  const lowStock = products.filter((p) => p.stock > 0 && p.stock <= p.lowStockAlert).length;
+  const outOfStock = products.filter((p: any) => p.stock === 0).length;
+  const lowStock = products.filter((p: any) => p.stock > 0 && p.stock <= p.lowStockAlert).length;
 
   return (
     <div>

@@ -6,7 +6,7 @@ interface Review {
   title: string | null;
   body: string | null;
   createdAt: Date;
-  user: { name: string; image: string | null };
+  user: { name: string | null; image: string | null };
   product: { name: string };
 }
 
@@ -87,10 +87,10 @@ export async function TestimonialsSection() {
               <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
                 {r.user.image ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={r.user.image} alt={r.user.name} className="w-10 h-10 rounded-full object-cover" />
+                  <img src={r.user.image} alt={r.user.name ?? ""} className="w-10 h-10 rounded-full object-cover" />
                 ) : (
                   <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-bold text-sm flex-shrink-0">
-                    {r.user.name?.[0]?.toUpperCase() ?? "U"}
+                    {(r.user.name ?? "U")[0].toUpperCase()}
                   </div>
                 )}
                 <div>

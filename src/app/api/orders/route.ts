@@ -89,7 +89,7 @@ export async function POST(req: NextRequest) {
         const { sendOrderConfirmationEmail } = await import("@/lib/resend");
         sendOrderConfirmationEmail(
           user.email,
-          user.name,
+          user.name ?? "Cliente",
           order.orderNumber,
           total,
           items.map((i: any) => ({ name: i.name, quantity: i.quantity, price: i.price }))
