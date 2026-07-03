@@ -82,7 +82,7 @@ export function Header() {
       {/* Announcement bar */}
       <div className="bg-gray-900 text-white text-center text-xs py-2 px-4">
         <span>Envío gratis en pedidos mayores a L. {freeThreshold} — Usa el código: </span>
-        <strong>VELORA10</strong>
+        <strong>SOFIAS10</strong>
         <span> para 10% de descuento en tu primera compra</span>
       </div>
 
