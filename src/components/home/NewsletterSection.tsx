@@ -1,17 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Mail, ArrowRight } from "lucide-react";
 
-export function NewsletterSection() {
+export function NewsletterSection({ storeName = "nuestra tienda" }: { storeName?: string }) {
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
-  const [storeName, setStoreName] = useState("nuestra tienda");
-
-  useEffect(() => {
-    fetch("/api/config").then(r => r.json()).then(d => { if (d.store_name) setStoreName(d.store_name); }).catch(() => {});
-  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
