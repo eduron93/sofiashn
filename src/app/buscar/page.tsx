@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+﻿import { Suspense } from "react";
 import { CatalogClient } from "@/components/catalog/CatalogClient";
 import type { Metadata } from "next";
 
@@ -10,7 +10,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   const { q } = await searchParams;
   return {
     title: q ? `Búsqueda: "${q}"` : "Buscar productos",
-    description: `Resultados de búsqueda para "${q}" en VELORA`,
+    description: `Resultados de búsqueda para "${q}" en SOFIAS HN`,
   };
 }
 

@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const name = categoryNames[slug] || slug;
   return {
     title: name,
-    description: `Explora la colección ${name} en VELORA. Moda premium con los mejores precios.`,
+    description: `Explora la colección ${name} en SOFIAS HN. Moda premium con los mejores precios.`,
   };
 }
 

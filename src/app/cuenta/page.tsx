@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
@@ -204,7 +204,7 @@ export default function AccountPage() {
     <div className="min-h-screen bg-gray-50 py-16">
       <div className="max-w-md mx-auto px-4">
         <div className="text-center mb-8">
-          <span className="text-2xl font-bold tracking-[0.3em]">VELORA</span>
+          <span className="text-2xl font-bold tracking-[0.3em]">SOFIAS HN</span>
           <p className="text-gray-500 mt-2 text-sm">Tu cuenta personal</p>
         </div>
 

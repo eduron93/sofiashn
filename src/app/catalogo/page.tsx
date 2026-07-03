@@ -1,10 +1,10 @@
-import { Suspense } from "react";
+﻿import { Suspense } from "react";
 import { CatalogClient } from "@/components/catalog/CatalogClient";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Catálogo",
-  description: "Explora toda la colección VELORA. Moda para mujeres, hombres, niños, calzado, accesorios y hogar.",
+  description: "Explora toda la colección SOFIAS HN. Moda para mujeres, hombres, niños, calzado, accesorios y hogar.",
 };
 
 interface Props {

@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { readFileSync, existsSync } from "fs";
 import { join } from "path";
 
@@ -10,7 +10,7 @@ export async function GET() {
     const raw = existsSync(path) ? JSON.parse(readFileSync(path, "utf-8")) : {};
     return NextResponse.json({
       // Tienda
-      store_name: raw.store_name ?? "VELORA",
+      store_name: raw.store_name ?? "SOFIAS HN",
       store_logo: raw.store_logo ?? "",
       store_email: raw.store_email ?? "",
       store_phone: raw.store_phone ?? "",
@@ -42,7 +42,7 @@ export async function GET() {
     });
   } catch {
     return NextResponse.json({
-      store_name: "VELORA",
+      store_name: "SOFIAS HN",
       shipping_free_threshold: "999",
       shipping_standard_price: "99",
       shipping_express_price: "150",

@@ -1,10 +1,10 @@
-"use client";
+﻿"use client";
 
 import { motion } from "framer-motion";
 
 export function WhatsAppButton() {
   const phone = "5215512345678";
-  const message = encodeURIComponent("Hola! Tengo una pregunta sobre un producto en VELORA.");
+  const message = encodeURIComponent("Hola! Tengo una pregunta sobre un producto en SOFIAS HN.");
   const href = `https://wa.me/${phone}?text=${message}`;
 
   return (

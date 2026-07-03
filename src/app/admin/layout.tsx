@@ -1,8 +1,8 @@
-import { AdminSidebar } from "@/components/admin/AdminSidebar";
+﻿import { AdminSidebar } from "@/components/admin/AdminSidebar";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: { default: "Admin Panel", template: "%s | VELORA Admin" },
+  title: { default: "Admin Panel", template: "%s | SOFIAS HN Admin" },
   robots: { index: false, follow: false },
 };
 

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -34,7 +34,7 @@ const info = [
 export function Footer() {
   const year = new Date().getFullYear();
   const [cfg, setCfg] = useState({
-    store_name: "VELORA",
+    store_name: "SOFIAS HN",
     store_logo: "",
     store_email: "",
     store_phone: "",

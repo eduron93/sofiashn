@@ -1,11 +1,11 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { ArrowRight, Clock, Tag, FileText } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Blog de Moda | VELORA",
-  description: "Tendencias, consejos de estilo y novedades de moda en el blog de VELORA.",
+  title: "Blog de Moda | SOFIAS HN",
+  description: "Tendencias, consejos de estilo y novedades de moda en el blog de SOFIAS HN.",
 };
 
 interface Post {
@@ -51,7 +51,7 @@ export default async function BlogPage() {
       <div className="bg-white border-b border-gray-100 py-14">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-xs font-semibold tracking-[0.4em] text-gray-400 uppercase mb-3">Inspiración & Estilo</p>
-          <h1 className="text-4xl font-bold text-gray-900 tracking-tight">Blog VELORA</h1>
+          <h1 className="text-4xl font-bold text-gray-900 tracking-tight">Blog SOFIAS HN</h1>
           <p className="mt-3 text-gray-500 max-w-md mx-auto">
             Tendencias, consejos y todo lo que necesitas saber sobre moda.
           </p>

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -30,7 +30,7 @@ const ALL_MENU = [
 export function AdminSidebar() {
   const pathname = usePathname();
   const [permissions, setPermissions] = useState<string[] | null>(null);
-  const [storeName, setStoreName] = useState("VELORA");
+  const [storeName, setStoreName] = useState("SOFIAS HN");
 
   useEffect(() => {
     fetch("/api/admin/me")

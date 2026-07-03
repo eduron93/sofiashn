@@ -1,4 +1,4 @@
-import type { Metadata, Viewport } from "next";
+﻿import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
@@ -15,15 +15,15 @@ import { headers } from "next/headers";
 function getStoreConfig(): { maintenance: boolean; name: string; description: string } {
   try {
     const path = join(process.cwd(), "store-config.json");
-    if (!existsSync(path)) return { maintenance: false, name: "VELORA", description: "" };
+    if (!existsSync(path)) return { maintenance: false, name: "SOFIAS HN", description: "" };
     const cfg = JSON.parse(readFileSync(path, "utf-8"));
     return {
       maintenance: cfg.maintenance_mode === "true",
-      name: cfg.store_name || "VELORA",
+      name: cfg.store_name || "SOFIAS HN",
       description: cfg.seo_description || cfg.store_description || "",
     };
   } catch {
-    return { maintenance: false, name: "VELORA", description: "" };
+    return { maintenance: false, name: "SOFIAS HN", description: "" };
   }
 }
 

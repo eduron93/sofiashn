@@ -1,9 +1,9 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { FileText } from "lucide-react";
 
 export const metadata = {
-  title: "Términos y Condiciones | VELORA",
-  description: "Términos y condiciones de uso de la tienda VELORA.",
+  title: "Términos y Condiciones | SOFIAS HN",
+  description: "Términos y condiciones de uso de la tienda SOFIAS HN.",
 };
 
 const sections = [
@@ -13,7 +13,7 @@ const sections = [
   },
   {
     title: "2. Uso del sitio",
-    content: `Este sitio web es para uso personal y no comercial. No puedes modificar, copiar, distribuir, transmitir, mostrar, publicar, vender, licenciar, crear trabajos derivados ni usar el contenido de este sitio con fines comerciales sin autorización expresa de VELORA.`,
+    content: `Este sitio web es para uso personal y no comercial. No puedes modificar, copiar, distribuir, transmitir, mostrar, publicar, vender, licenciar, crear trabajos derivados ni usar el contenido de este sitio con fines comerciales sin autorización expresa de SOFIAS HN.`,
   },
   {
     title: "3. Cuenta de usuario",
@@ -25,7 +25,7 @@ const sections = [
   },
   {
     title: "5. Proceso de compra",
-    content: `Al realizar un pedido, declaras que la información proporcionada es veraz y completa. La confirmación de tu pedido se enviará al correo electrónico registrado. VELORA se reserva el derecho de rechazar cualquier pedido por cualquier razón.`,
+    content: `Al realizar un pedido, declaras que la información proporcionada es veraz y completa. La confirmación de tu pedido se enviará al correo electrónico registrado. SOFIAS HN se reserva el derecho de rechazar cualquier pedido por cualquier razón.`,
   },
   {
     title: "6. Envíos y entregas",
@@ -37,15 +37,15 @@ const sections = [
   },
   {
     title: "8. Limitación de responsabilidad",
-    content: `VELORA no será responsable por daños indirectos, incidentales, especiales o consecuentes que resulten del uso o la imposibilidad de usar nuestros productos o servicios. Nuestra responsabilidad máxima se limita al valor del pedido en cuestión.`,
+    content: `SOFIAS HN no será responsable por daños indirectos, incidentales, especiales o consecuentes que resulten del uso o la imposibilidad de usar nuestros productos o servicios. Nuestra responsabilidad máxima se limita al valor del pedido en cuestión.`,
   },
   {
     title: "9. Propiedad intelectual",
-    content: `Todo el contenido de este sitio, incluyendo textos, imágenes, logotipos y diseños, es propiedad de VELORA y está protegido por las leyes de derechos de autor. Queda prohibida su reproducción sin autorización escrita.`,
+    content: `Todo el contenido de este sitio, incluyendo textos, imágenes, logotipos y diseños, es propiedad de SOFIAS HN y está protegido por las leyes de derechos de autor. Queda prohibida su reproducción sin autorización escrita.`,
   },
   {
     title: "10. Modificaciones",
-    content: `VELORA se reserva el derecho de modificar estos términos en cualquier momento. Las modificaciones entrarán en vigor inmediatamente después de su publicación en el sitio. El uso continuado del sitio después de los cambios constituye aceptación de los nuevos términos.`,
+    content: `SOFIAS HN se reserva el derecho de modificar estos términos en cualquier momento. Las modificaciones entrarán en vigor inmediatamente después de su publicación en el sitio. El uso continuado del sitio después de los cambios constituye aceptación de los nuevos términos.`,
   },
   {
     title: "11. Ley aplicable",
@@ -71,7 +71,7 @@ export default function TerminosPage() {
         <div className="bg-white rounded-2xl shadow-sm p-8 sm:p-10 space-y-8">
           <p className="text-gray-600 text-sm leading-relaxed border-l-4 border-gray-900 pl-4">
             Por favor, lee estos Términos y Condiciones detenidamente antes de usar nuestros servicios.
-            Al realizar una compra o crear una cuenta en VELORA, aceptas estos términos en su totalidad.
+            Al realizar una compra o crear una cuenta en SOFIAS HN, aceptas estos términos en su totalidad.
           </p>
 
           {sections.map((s) => (

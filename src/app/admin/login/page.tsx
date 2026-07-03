@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -38,7 +38,7 @@ export default function AdminLoginPage() {
       <div className="w-full max-w-sm">
         {/* Logo */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold tracking-widest text-gray-900">VELORA</h1>
+          <h1 className="text-3xl font-bold tracking-widest text-gray-900">SOFIAS HN</h1>
           <p className="text-xs text-gray-400 mt-1 uppercase tracking-wider">Panel de administración</p>
         </div>
 

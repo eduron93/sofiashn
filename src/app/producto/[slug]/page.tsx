@@ -50,7 +50,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!product) return { title: "Producto no encontrado" };
   return {
     title: product.name,
-    description: product.description || `Compra ${product.name} en VELORA`,
+    description: product.description || `Compra ${product.name} en SOFIAS HN`,
     openGraph: { images: product.images[0] ? [{ url: product.images[0] }] : [] },
   };
 }

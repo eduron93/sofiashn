@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useRef } from "react";
 import { Save, Store, Truck, CreditCard, Mail, Globe, Lock, Upload, X, Loader2 } from "lucide-react";
@@ -140,7 +140,7 @@ export function ConfiguracionClient({ settings: initial }: Props) {
           {active === "tienda" && (
             <>
               <h2 className="font-semibold text-gray-900 mb-2">Información de la tienda</h2>
-              {field("store_name", "Nombre de la tienda", "VELORA")}
+              {field("store_name", "Nombre de la tienda", "SOFIAS HN")}
               {field("store_email", "Email de contacto", "hola@velora.mx", "email")}
               {field("store_phone", "Teléfono", "+504 9999-9999", "tel")}
               {field("store_address", "Dirección", "Tegucigalpa, Honduras")}
@@ -206,7 +206,7 @@ export function ConfiguracionClient({ settings: initial }: Props) {
               <div className="pt-4 border-t border-gray-50 space-y-4">
                 {field("payment_bank_name", "Banco", "Banco Atlántida")}
                 {field("payment_bank_account", "Número de cuenta", "0000-0000-0000")}
-                {field("payment_bank_holder", "Titular de la cuenta", "VELORA S.A.")}
+                {field("payment_bank_holder", "Titular de la cuenta", "SOFIAS HN S.A.")}
               </div>
             </>
           )}
@@ -214,7 +214,7 @@ export function ConfiguracionClient({ settings: initial }: Props) {
           {active === "email" && (
             <>
               <h2 className="font-semibold text-gray-900 mb-2">Configuración de email</h2>
-              {field("email_from_name", "Nombre del remitente", "VELORA")}
+              {field("email_from_name", "Nombre del remitente", "SOFIAS HN")}
               {field("email_from_address", "Email remitente", "no-reply@velora.mx", "email")}
               {field("email_smtp_host", "SMTP Host", "smtp.gmail.com")}
               {field("email_smtp_port", "SMTP Puerto", "587")}
@@ -231,7 +231,7 @@ export function ConfiguracionClient({ settings: initial }: Props) {
           {active === "seo" && (
             <>
               <h2 className="font-semibold text-gray-900 mb-2">SEO y redes sociales</h2>
-              {field("seo_title", "Título del sitio", "VELORA — Moda Premium")}
+              {field("seo_title", "Título del sitio", "SOFIAS HN — Moda Premium")}
               {textarea("seo_description", "Meta descripción", "Descubre la colección más exclusiva de moda femenina en Honduras...")}
               {field("seo_keywords", "Palabras clave", "moda, ropa, mujer, Honduras, premium")}
               {field("seo_og_image", "Imagen Open Graph (URL)", "https://...")}

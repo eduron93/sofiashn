@@ -1,9 +1,9 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { Shield } from "lucide-react";
 
 export const metadata = {
-  title: "Política de Privacidad | VELORA",
-  description: "Política de privacidad y tratamiento de datos personales de VELORA.",
+  title: "Política de Privacidad | SOFIAS HN",
+  description: "Política de privacidad y tratamiento de datos personales de SOFIAS HN.",
 };
 
 const sections = [
@@ -70,7 +70,7 @@ export default function PrivacidadPage() {
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="bg-white rounded-2xl shadow-sm p-8 sm:p-10 space-y-8">
           <p className="text-gray-600 text-sm leading-relaxed border-l-4 border-gray-900 pl-4">
-            En VELORA nos tomamos muy en serio la privacidad de tus datos. Esta política explica qué
+            En SOFIAS HN nos tomamos muy en serio la privacidad de tus datos. Esta política explica qué
             información recopilamos, cómo la usamos y qué derechos tienes sobre ella.
           </p>
 

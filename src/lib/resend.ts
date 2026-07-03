@@ -1,9 +1,9 @@
-import { Resend } from "resend";
+﻿import { Resend } from "resend";
 
 export const resend = new Resend(process.env.RESEND_API_KEY);
 
-const FROM = process.env.RESEND_FROM ?? "VELORA HN <noreply@sofiashn.com>";
-const STORE = process.env.NEXT_PUBLIC_STORE_NAME ?? "VELORA HN";
+const FROM = process.env.RESEND_FROM ?? "SOFIAS HN HN <noreply@sofiashn.com>";
+const STORE = process.env.NEXT_PUBLIC_STORE_NAME ?? "SOFIAS HN HN";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "https://sofiashn.com";
 
 export async function sendWelcomeEmail(to: string, name: string) {

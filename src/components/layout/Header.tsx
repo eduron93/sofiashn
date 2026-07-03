@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
@@ -67,7 +67,7 @@ export function Header() {
   };
 
   const [freeThreshold, setFreeThreshold] = useState("999");
-  const [storeName, setStoreName] = useState("VELORA");
+  const [storeName, setStoreName] = useState("SOFIAS HN");
   const [storeLogo, setStoreLogo] = useState("");
   useEffect(() => {
     fetch("/api/config").then(r => r.json()).then(d => {

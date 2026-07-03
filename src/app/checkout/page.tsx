@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -284,7 +284,7 @@ export default function CheckoutPage() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <div className="text-center mb-8">
-          <span className="text-3xl font-bold tracking-[0.3em]">VELORA</span>
+          <span className="text-3xl font-bold tracking-[0.3em]">SOFIAS HN</span>
           <p className="text-xs text-gray-400 mt-1 flex items-center justify-center gap-1">
             <Lock className="w-3 h-3" /> Compra 100% segura
           </p>
@@ -591,7 +591,7 @@ export default function CheckoutPage() {
                             value={couponInput}
                             onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
                             onKeyDown={(e) => e.key === "Enter" && applyCoupon()}
-                            placeholder="Ej: VELORA10"
+                            placeholder="Ej: SOFIAS HN10"
                             className="flex-1 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
                           />
                           <button
@@ -679,7 +679,7 @@ export default function CheckoutPage() {
                     {orderNumber}
                   </p>
                   <p className="text-sm text-gray-500 max-w-sm mx-auto mb-8">
-                    Recibirás confirmación con los detalles de tu pedido. ¡Gracias por comprar en VELORA!
+                    Recibirás confirmación con los detalles de tu pedido. ¡Gracias por comprar en SOFIAS HN!
                   </p>
                   <div className="flex gap-3 justify-center">
                     <button
