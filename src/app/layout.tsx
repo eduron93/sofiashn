@@ -8,6 +8,7 @@ import { Toaster } from "@/components/ui/Toaster";
 import { WhatsAppButton } from "@/components/ui/WhatsAppButton";
 import { NewsletterPopup } from "@/components/marketing/NewsletterPopup";
 import { FavoritesSync } from "@/components/layout/FavoritesSync";
+import { Providers } from "@/components/layout/Providers";
 import { readFileSync, existsSync } from "fs";
 import { join } from "path";
 import { headers } from "next/headers";
@@ -94,14 +95,16 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="es" suppressHydrationWarning>
       <body className={`${geistSans.variable} font-sans antialiased bg-white text-gray-900`}>
-        <Header />
-        <main className="min-h-screen px-4 sm:px-6 lg:px-8 py-6">{children}</main>
-        <Footer />
-        <CartDrawer />
-        <WhatsAppButton />
-        <NewsletterPopup />
-        <FavoritesSync />
-        <Toaster />
+        <Providers>
+          <Header />
+          <main className="min-h-screen px-4 sm:px-6 lg:px-8 py-6">{children}</main>
+          <Footer />
+          <CartDrawer />
+          <WhatsAppButton />
+          <NewsletterPopup />
+          <FavoritesSync />
+          <Toaster />
+        </Providers>
       </body>
     </html>
   );

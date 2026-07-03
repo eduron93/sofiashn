@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { motion } from "framer-motion";
 import { User, Package, Heart, MapPin, Lock, LogOut, ChevronRight, ShoppingBag, Truck } from "lucide-react";
 import Link from "next/link";
@@ -47,13 +47,32 @@ export default function AccountPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const { data: googleSession, status: googleStatus } = useSession();
 
   useEffect(() => {
-    fetch("/api/auth/me")
-      .then((r) => r.json())
-      .then((d) => setUser(d.user))
-      .finally(() => setLoadingUser(false));
-  }, []);
+    async function loadUser() {
+      // Primero intenta con velora-token
+      const res = await fetch("/api/auth/me");
+      const data = await res.json();
+      if (data.user) {
+        setUser(data.user);
+        setLoadingUser(false);
+        return;
+      }
+      // Si hay sesión de Google, intercámbiala por velora-token
+      if (googleStatus === "authenticated" && googleSession) {
+        const r = await fetch("/api/auth/google-token", { method: "POST" });
+        const d = await r.json();
+        if (d.user) {
+          setUser(d.user);
+          setLoadingUser(false);
+          return;
+        }
+      }
+      setLoadingUser(false);
+    }
+    if (googleStatus !== "loading") loadUser();
+  }, [googleStatus, googleSession]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
