@@ -45,6 +45,18 @@ export async function POST(req: NextRequest) {
       )
     );
 
+    // Snapshot address data so it's always available in admin even if address is later deleted
+    let shippingAddress: Record<string, string> | null = null;
+    if (addressId) {
+      const addr = await prisma.address.findUnique({ where: { id: addressId } });
+      if (addr) {
+        shippingAddress = {
+          name: addr.name, phone: addr.phone, street: addr.street,
+          city: addr.city, state: addr.state, zipCode: addr.zipCode, country: addr.country,
+        };
+      }
+    }
+
     const order = await prisma.order.create({
       data: {
         orderNumber,
@@ -56,6 +68,7 @@ export async function POST(req: NextRequest) {
         paymentMethod,
         notes,
         ...(addressId ? { addressId } : {}),
+        ...(shippingAddress ? { shippingAddress } : {}),
         ...(couponId ? { couponId } : {}),
         status: "CONFIRMED",
         paymentStatus: "PENDING",

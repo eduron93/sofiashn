@@ -33,6 +33,13 @@ export default function CheckoutPage() {
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showAddressForm, setShowAddressForm] = useState(false);
+  const [savingAddress, setSavingAddress] = useState(false);
+  const [addressFormError, setAddressFormError] = useState("");
+  const [newAddress, setNewAddress] = useState({
+    name: "", phone: "", street: "", city: "", state: "", zipCode: "", country: "Honduras",
+  });
 
   const [paymentConfig, setPaymentConfig] = useState({
     cod: true,
@@ -133,11 +140,13 @@ export default function CheckoutPage() {
         if (meRes.ok) {
           const { user } = await meRes.json();
           if (user) {
+            setIsLoggedIn(true);
             setFormData((prev) => ({
               ...prev,
               name: user.name ?? prev.name,
               email: user.email ?? prev.email,
             }));
+            setNewAddress((prev) => ({ ...prev, name: user.name ?? "", phone: user.phone ?? "" }));
           }
         }
 
@@ -180,6 +189,43 @@ export default function CheckoutPage() {
       zipCode: addr.zipCode,
       country: addr.country,
     }));
+  };
+
+  const handleAddAddress = async () => {
+    const { name, phone, street, city, state, zipCode } = newAddress;
+    if (!name || !phone || !street || !city || !state || !zipCode) {
+      setAddressFormError("Completa todos los campos");
+      return;
+    }
+    setSavingAddress(true);
+    setAddressFormError("");
+    try {
+      const res = await fetch("/api/cuenta/direcciones", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...newAddress, isDefault: true }),
+      });
+      const data = await res.json();
+      if (!res.ok) { setAddressFormError(data.error ?? "Error al guardar"); return; }
+      const addr: Address = data.address;
+      setAddresses((prev) => [...prev, addr]);
+      setSelectedAddressId(addr.id);
+      setFormData((prev) => ({
+        ...prev,
+        phone: addr.phone,
+        street: addr.street,
+        city: addr.city,
+        state: addr.state,
+        zipCode: addr.zipCode,
+        country: addr.country,
+      }));
+      setShowAddressForm(false);
+      setNewAddress({ name: "", phone: "", street: "", city: "", state: "", zipCode: "", country: "Honduras" });
+    } catch {
+      setAddressFormError("Error de conexión");
+    } finally {
+      setSavingAddress(false);
+    }
   };
 
   const applyCoupon = async () => {
@@ -329,6 +375,83 @@ export default function CheckoutPage() {
                     <User className="w-5 h-5" /> Datos de entrega
                   </h2>
 
+                  {/* Login prompt */}
+                  {!isLoggedIn && (
+                    <div className="mb-6 bg-amber-50 border border-amber-200 rounded-xl p-4">
+                      <p className="text-sm font-semibold text-amber-800 mb-1">Inicia sesión para continuar</p>
+                      <p className="text-xs text-amber-700 mb-3">Necesitas una cuenta para realizar pedidos y guardar tu dirección de entrega.</p>
+                      <a href="/cuenta?redirect=/checkout" className="inline-block px-4 py-2 bg-gray-900 text-white text-xs font-medium rounded-lg hover:bg-gray-800 transition-colors">
+                        Iniciar sesión →
+                      </a>
+                    </div>
+                  )}
+
+                  {/* No address prompt */}
+                  {isLoggedIn && addresses.length === 0 && (
+                    <div className="mb-6">
+                      {!showAddressForm ? (
+                        <div className="border-2 border-dashed border-gray-200 rounded-xl p-5 text-center">
+                          <MapPin className="w-8 h-8 text-gray-300 mx-auto mb-2" />
+                          <p className="text-sm font-semibold text-gray-700 mb-1">No tienes una dirección de entrega</p>
+                          <p className="text-xs text-gray-400 mb-3">Agrega tu dirección para continuar con el pedido</p>
+                          <button
+                            type="button"
+                            onClick={() => setShowAddressForm(true)}
+                            className="px-5 py-2.5 bg-gray-900 text-white text-sm font-medium rounded-xl hover:bg-gray-800 transition-colors"
+                          >
+                            + Agregar dirección
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="border border-gray-200 rounded-xl p-4">
+                          <p className="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-1.5">
+                            <MapPin className="w-4 h-4" /> Nueva dirección de entrega
+                          </p>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            {[
+                              { label: "Nombre completo", key: "name", full: true },
+                              { label: "Teléfono", key: "phone" },
+                              { label: "Calle y número", key: "street", full: true },
+                              { label: "Ciudad", key: "city" },
+                              { label: "Departamento", key: "state" },
+                              { label: "Código Postal", key: "zipCode" },
+                            ].map((f) => (
+                              <div key={f.key} className={f.full ? "sm:col-span-2" : ""}>
+                                <label className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1 block">{f.label}</label>
+                                <input
+                                  type="text"
+                                  value={(newAddress as any)[f.key]}
+                                  onChange={(e) => setNewAddress((prev) => ({ ...prev, [f.key]: e.target.value }))}
+                                  className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
+                                />
+                              </div>
+                            ))}
+                          </div>
+                          {addressFormError && (
+                            <p className="text-xs text-red-500 mt-2">{addressFormError}</p>
+                          )}
+                          <div className="flex gap-2 mt-3">
+                            <button
+                              type="button"
+                              onClick={() => { setShowAddressForm(false); setAddressFormError(""); }}
+                              className="flex-1 border border-gray-200 py-2.5 rounded-lg text-sm font-medium hover:bg-gray-50"
+                            >
+                              Cancelar
+                            </button>
+                            <button
+                              type="button"
+                              onClick={handleAddAddress}
+                              disabled={savingAddress}
+                              className="flex-1 bg-gray-900 text-white py-2.5 rounded-lg text-sm font-semibold hover:bg-gray-800 disabled:opacity-60"
+                            >
+                              {savingAddress ? "Guardando..." : "Guardar dirección"}
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
                   {addresses.length > 0 && (
                     <div className="mb-6">
                       <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-1">
@@ -362,20 +485,60 @@ export default function CheckoutPage() {
                           </button>
                         ))}
                       </div>
-                      <p className="text-xs text-gray-400 mt-2">O edita los datos manualmente abajo</p>
+                      <button
+                        type="button"
+                        onClick={() => setShowAddressForm(true)}
+                        className="text-xs text-gray-500 underline mt-2 inline-block"
+                      >
+                        + Agregar nueva dirección
+                      </button>
+                      {showAddressForm && (
+                        <div className="mt-3 border border-gray-200 rounded-xl p-4">
+                          <p className="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-1.5">
+                            <MapPin className="w-4 h-4" /> Nueva dirección
+                          </p>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            {[
+                              { label: "Nombre completo", key: "name", full: true },
+                              { label: "Teléfono", key: "phone" },
+                              { label: "Calle y número", key: "street", full: true },
+                              { label: "Ciudad", key: "city" },
+                              { label: "Departamento", key: "state" },
+                              { label: "Código Postal", key: "zipCode" },
+                            ].map((f) => (
+                              <div key={f.key} className={f.full ? "sm:col-span-2" : ""}>
+                                <label className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1 block">{f.label}</label>
+                                <input
+                                  type="text"
+                                  value={(newAddress as any)[f.key]}
+                                  onChange={(e) => setNewAddress((prev) => ({ ...prev, [f.key]: e.target.value }))}
+                                  className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
+                                />
+                              </div>
+                            ))}
+                          </div>
+                          {addressFormError && <p className="text-xs text-red-500 mt-2">{addressFormError}</p>}
+                          <div className="flex gap-2 mt-3">
+                            <button type="button" onClick={() => { setShowAddressForm(false); setAddressFormError(""); }}
+                              className="flex-1 border border-gray-200 py-2.5 rounded-lg text-sm font-medium hover:bg-gray-50">
+                              Cancelar
+                            </button>
+                            <button type="button" onClick={handleAddAddress} disabled={savingAddress}
+                              className="flex-1 bg-gray-900 text-white py-2.5 rounded-lg text-sm font-semibold hover:bg-gray-800 disabled:opacity-60">
+                              {savingAddress ? "Guardando..." : "Guardar"}
+                            </button>
+                          </div>
+                        </div>
+                      )}
                       <div className="border-t border-gray-100 my-4" />
                     </div>
                   )}
 
+                  {/* Datos del cliente */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {[
                       { label: "Nombre completo", key: "name", type: "text", full: true },
-                      { label: "Correo electrónico", key: "email", type: "email" },
-                      { label: "Teléfono", key: "phone", type: "tel" },
-                      { label: "Calle y número", key: "street", type: "text", full: true },
-                      { label: "Ciudad", key: "city", type: "text" },
-                      { label: "Departamento", key: "state", type: "text" },
-                      { label: "Código Postal", key: "zipCode", type: "text" },
+                      { label: "Correo electrónico", key: "email", type: "email", full: false },
                     ].map((field) => (
                       <div key={field.key} className={field.full ? "sm:col-span-2" : ""}>
                         <label className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1 block">
@@ -390,13 +553,17 @@ export default function CheckoutPage() {
                       </div>
                     ))}
                   </div>
+
                   <button
                     onClick={() => setStep(1)}
-                    disabled={!formData.name || !formData.email || !formData.street}
+                    disabled={!formData.name || !formData.email || !selectedAddressId}
                     className="mt-6 w-full bg-gray-900 text-white py-4 rounded-xl font-semibold text-sm hover:bg-gray-800 transition-colors disabled:bg-gray-300"
                   >
                     Continuar al Envío →
                   </button>
+                  {!selectedAddressId && isLoggedIn && (
+                    <p className="text-xs text-center text-gray-400 mt-2">Selecciona o agrega una dirección de entrega para continuar</p>
+                  )}
                 </motion.div>
               )}
 

@@ -28,7 +28,9 @@ interface Order {
   id: string; orderNumber: string; total: number; subtotal: number;
   discount: number; shipping: number; status: string; createdAt: string;
   user: { name: string | null; email: string } | null;
-  address: Address | null; items: OrderItem[];
+  address: Address | null;
+  shippingAddress: Address | null;
+  items: OrderItem[];
 }
 
 export function PedidosClient({ orders: initial }: { orders: Order[] }) {
@@ -210,17 +212,20 @@ export function PedidosClient({ orders: initial }: { orders: Order[] }) {
                   </div>
 
                   {/* Dirección de entrega */}
-                  {order.address && (
-                    <div className="p-3 bg-white rounded-xl border border-gray-200">
-                      <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-1">
-                        <MapPin className="w-3.5 h-3.5" /> Dirección de entrega
-                      </p>
-                      <p className="text-sm font-medium text-gray-900">{order.address.name}</p>
-                      <p className="text-sm text-gray-600">{order.address.street}</p>
-                      <p className="text-sm text-gray-600">{order.address.city}, {order.address.state} {order.address.zipCode}</p>
-                      <p className="text-xs text-gray-400 mt-1">{order.address.phone}</p>
-                    </div>
-                  )}
+                  {(order.address || order.shippingAddress) && (() => {
+                    const addr = order.address ?? order.shippingAddress!;
+                    return (
+                      <div className="p-3 bg-white rounded-xl border border-gray-200">
+                        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-1">
+                          <MapPin className="w-3.5 h-3.5" /> Dirección de entrega
+                        </p>
+                        <p className="text-sm font-medium text-gray-900">{addr.name}</p>
+                        <p className="text-sm text-gray-600">{addr.street}</p>
+                        <p className="text-sm text-gray-600">{addr.city}, {addr.state} {addr.zipCode}</p>
+                        <p className="text-xs text-gray-400 mt-1">{addr.phone} — {addr.country}</p>
+                      </div>
+                    );
+                  })()}
 
                   {/* Productos */}
                   <div>
