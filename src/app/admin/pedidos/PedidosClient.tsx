@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { ChevronDown, ChevronUp, Package, MapPin, Search, X } from "lucide-react";
+import { ChevronDown, ChevronUp, Package, MapPin, Search, X, CreditCard } from "lucide-react";
 
 const STATUS_OPTIONS = [
   { value: "PENDING",    label: "Pendiente",    color: "bg-yellow-100 text-yellow-700" },
@@ -24,9 +24,16 @@ interface Address {
   name: string; phone: string; street: string;
   city: string; state: string; zipCode: string; country: string;
 }
+const PAYMENT_LABELS: Record<string, string> = {
+  delivery: "Contra entrega",
+  transfer: "Transferencia bancaria",
+  card: "Tarjeta de crédito/débito",
+};
+
 interface Order {
   id: string; orderNumber: string; total: number; subtotal: number;
   discount: number; shipping: number; status: string; createdAt: string;
+  paymentMethod: string | null;
   user: { name: string | null; email: string } | null;
   address: Address | null;
   shippingAddress: Address | null;
@@ -210,6 +217,19 @@ export function PedidosClient({ orders: initial }: { orders: Order[] }) {
                       <p className="mt-2 text-xs text-red-500 font-medium">Pedido cancelado</p>
                     )}
                   </div>
+
+                  {/* Método de pago */}
+                  {order.paymentMethod && (
+                    <div className="p-3 bg-white rounded-xl border border-gray-200 flex items-center gap-2">
+                      <CreditCard className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                      <div>
+                        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Método de pago</p>
+                        <p className="text-sm font-medium text-gray-900 mt-0.5">
+                          {PAYMENT_LABELS[order.paymentMethod] ?? order.paymentMethod}
+                        </p>
+                      </div>
+                    </div>
+                  )}
 
                   {/* Dirección de entrega */}
                   {(order.address || order.shippingAddress) && (() => {
