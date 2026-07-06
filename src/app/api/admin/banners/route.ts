@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyAdminRequest } from "@/lib/admin-auth";
+import { deleteStorageImages } from "@/lib/supabase-storage";
 
 function isValidInternalLink(url: string | null): boolean {
   if (!url) return true;
@@ -59,6 +60,16 @@ export async function PATCH(req: NextRequest) {
     }
 
     const { prisma } = await import("@/lib/prisma");
+
+    // Si cambiaron las imágenes, borrar las anteriores de Storage
+    if (image !== undefined || mobileImage !== undefined) {
+      const old = await prisma.banner.findUnique({ where: { id }, select: { image: true, mobileImage: true } });
+      const toDelete: string[] = [];
+      if (old && image !== undefined && image !== old.image) toDelete.push(old.image);
+      if (old && mobileImage !== undefined && mobileImage !== old.mobileImage && old.mobileImage) toDelete.push(old.mobileImage);
+      if (toDelete.length) deleteStorageImages(toDelete).catch(() => {});
+    }
+
     const banner = await prisma.banner.update({ where: { id }, data });
     return NextResponse.json({ banner });
   } catch {
@@ -74,7 +85,9 @@ export async function DELETE(req: NextRequest) {
     const id = new URL(req.url).searchParams.get("id");
     if (!id) return NextResponse.json({ error: "ID requerido" }, { status: 400 });
     const { prisma } = await import("@/lib/prisma");
+    const banner = await prisma.banner.findUnique({ where: { id }, select: { image: true, mobileImage: true } });
     await prisma.banner.delete({ where: { id } });
+    if (banner) deleteStorageImages([banner.image, banner.mobileImage]).catch(() => {});
     return NextResponse.json({ success: true });
   } catch {
     return NextResponse.json({ error: "Error al eliminar" }, { status: 500 });
