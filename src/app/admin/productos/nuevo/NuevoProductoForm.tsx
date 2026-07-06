@@ -62,7 +62,7 @@ const empty = {
 
 export function NuevoProductoForm({ categories, brands: initialBrands }: { categories: Category[]; brands: Brand[] }) {
   const router = useRouter();
-  const [form, setForm] = useState({ ...empty, categoryId: categories[0]?.id ?? "", sizes: getSizesForCategory(categories[0]) });
+  const [form, setForm] = useState({ ...empty, categoryId: categories[0]?.id ?? "" });
   const [imageInput, setImageInput] = useState("");
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -117,9 +117,7 @@ export function NuevoProductoForm({ categories, brands: initialBrands }: { categ
     set("features", form.features.filter((x) => x !== f));
 
   const handleCategoryChange = (categoryId: string) => {
-    const cat = categories.find((c) => c.id === categoryId);
-    // Pre-cargar las tallas sugeridas pero el usuario puede editarlas
-    setForm((f) => ({ ...f, categoryId, sizes: getSizesForCategory(cat) }));
+    setForm((f) => ({ ...f, categoryId }));
   };
 
   const addSize = () => {
