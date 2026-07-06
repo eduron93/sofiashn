@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { ChevronDown, ChevronUp, Package, MapPin, Search, X, CreditCard } from "lucide-react";
+import { ChevronDown, ChevronUp, Package, MapPin, Search, X, CreditCard, Trash2 } from "lucide-react";
 
 const STATUS_OPTIONS = [
   { value: "PENDING",    label: "Pendiente",    color: "bg-yellow-100 text-yellow-700" },
@@ -44,6 +44,7 @@ export function PedidosClient({ orders: initial }: { orders: Order[] }) {
   const [orders, setOrders] = useState<Order[]>(initial);
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const [updating, setUpdating] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState<string | null>(null);
   const [search, setSearch] = useState("");
 
   const filtered = useMemo(() => {
@@ -80,6 +81,17 @@ export function PedidosClient({ orders: initial }: { orders: Order[] }) {
       }
     } finally {
       setUpdating(null);
+    }
+  };
+
+  const handleDelete = async (orderId: string, orderNumber: string) => {
+    if (!confirm(`¿Eliminar el pedido ${orderNumber}? Esta acción no se puede deshacer.`)) return;
+    setDeleting(orderId);
+    try {
+      const res = await fetch(`/api/admin/pedidos?id=${orderId}`, { method: "DELETE" });
+      if (res.ok) setOrders(prev => prev.filter(o => o.id !== orderId));
+    } finally {
+      setDeleting(null);
     }
   };
 
@@ -172,6 +184,16 @@ export function PedidosClient({ orders: initial }: { orders: Order[] }) {
                 <span className="text-xs text-gray-400 w-24 flex-shrink-0 text-right hidden md:block">
                   {new Date(order.createdAt).toLocaleDateString("es-HN")}
                 </span>
+
+                {/* Eliminar */}
+                <button
+                  onClick={() => handleDelete(order.id, order.orderNumber)}
+                  disabled={deleting === order.id}
+                  className="text-gray-300 hover:text-red-500 transition-colors flex-shrink-0 disabled:opacity-40"
+                  title="Eliminar pedido"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
 
                 {/* Expandir */}
                 <button onClick={() => toggle(order.id)} className="text-gray-400 flex-shrink-0">
