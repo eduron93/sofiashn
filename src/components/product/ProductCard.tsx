@@ -115,11 +115,16 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
             </button>
           </div>
 
-          {/* Quick add to cart */}
+          {/* Quick add to cart + low stock (juntos para no cortarse) */}
           <div className={cn(
             "absolute bottom-0 left-0 right-0 transition-all duration-300",
             hovered ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
           )}>
+            {product.stock > 0 && product.stock <= 5 && (
+              <div className="bg-amber-400 text-white text-[10px] text-center py-1 font-semibold tracking-wide">
+                ¡Solo quedan {product.stock}!
+              </div>
+            )}
             <button
               onClick={handleAddToCart}
               disabled={product.stock === 0}
@@ -128,13 +133,6 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
               {product.stock === 0 ? "Agotado" : "Agregar al Carrito"}
             </button>
           </div>
-
-          {/* Low stock */}
-          {product.stock > 0 && product.stock <= 5 && (
-            <div className="absolute bottom-0 left-0 right-0 bg-amber-50 text-amber-700 text-[10px] text-center py-1 font-medium">
-              ¡Solo quedan {product.stock}!
-            </div>
-          )}
 
           {/* Out of stock overlay */}
           {product.stock === 0 && (
@@ -175,6 +173,11 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
               </div>
               <span className="text-[10px] text-gray-400">({product.reviewCount})</span>
             </div>
+          )}
+
+          {/* Low stock badge */}
+          {product.stock > 0 && product.stock <= 5 && (
+            <p className="text-[10px] text-amber-600 font-semibold mt-1">¡Solo quedan {product.stock}!</p>
           )}
 
           {/* Price */}
